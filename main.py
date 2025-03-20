@@ -8,15 +8,20 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
-def download_images(terms, quantity, use_subfolders=True):
+def download_images(terms, quantity, save_path="images", use_subfolders=True):
     """
     Downloads images from DuckDuckGo with support for categories and subfolders.
 
     Args:
         terms (str): Search terms in "category=term1,term2" format or "term1,term2".
         quantity (int): Number of images per term.
+        save_path (str): Directory where images will be saved.
         use_subfolders (bool): If True, creates subfolders inside categories.
     """
+    
+    # Create the main save directory
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
     
     # Parse terms (supports categories)
     categories = {}
@@ -35,7 +40,7 @@ def download_images(terms, quantity, use_subfolders=True):
     
     # Process terms without categories
     for term in simple_terms:
-        folder = term.replace(" ", "_")
+        folder = os.path.join(save_path, term.replace(" ", "_"))
         
         if not os.path.exists(folder):
             os.makedirs(folder)
@@ -74,12 +79,13 @@ def download_images(terms, quantity, use_subfolders=True):
     
     # Process categories
     for category, items in categories.items():
-        if not os.path.exists(category):
-            os.makedirs(category)
-            print(f"📁 Folder '{category}' created.")
+        category_path = os.path.join(save_path, category)
+        if not os.path.exists(category_path):
+            os.makedirs(category_path)
+            print(f"📁 Folder '{category_path}' created.")
         
         for term in items:
-            folder = os.path.join(category, term.replace(" ", "_")) if use_subfolders else category
+            folder = os.path.join(category_path, term.replace(" ", "_")) if use_subfolders else category_path
             
             if use_subfolders and not os.path.exists(folder):
                 os.makedirs(folder)
@@ -123,11 +129,17 @@ def main():
     parser = argparse.ArgumentParser(description="DuckDuckGo Image Scraper with Categories and Subfolders")
     parser.add_argument("terms", type=str, help="Search terms (category=term1,term2 or term1,term2)")
     parser.add_argument("quantity", type=int, help="Number of images per term")
+    parser.add_argument("--save-path", type=str, default="downloads", help="Directory to save images")
     parser.add_argument("--no-subfolders", action="store_true", help="Disable subfolders inside categories")
     
     args = parser.parse_args()
     
-    download_images(args.terms, args.quantity, not args.no_subfolders)
+    download_images(args.terms, args.quantity, args.save_path, not args.no_subfolders)
 
 if __name__ == "__main__":
     main()
+
+# Add the downloads folder to .gitignore
+with open(".gitignore", "a") as gitignore:
+    if "downloads/\n" not in open(".gitignore").read():
+        gitignore.write("downloads/\n")
