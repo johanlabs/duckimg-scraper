@@ -44,7 +44,7 @@ from dockimg import download_images
 download_images("fruits=apple,banana", 20, use_subfolders=False)
 ```
 
-# Projects with using duckimg-scraper
+### Projects with using duckimg-scraper
 
 Image-classification - https://github.com/Sem-Segredos-Tech/image-classification
 
