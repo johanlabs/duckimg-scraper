@@ -18,21 +18,21 @@ pip install -r requirements.txt
 ### Basic Usage
 Run the following command to download images:
 ```sh
-python dockimg.py "cars=tesla,ferrari" 50
+python main.py "cars=tesla,ferrari" 50
 ```
 This will download 50 images each for "tesla" and "ferrari" inside a "cars" folder.
 
 ### Without Categories
 If no categories are provided, images are stored directly:
 ```sh
-python dockimg.py "dog,cat" 30
+python main.py "dog,cat" 30
 ```
 This will download 30 images each for "dog" and "cat" in separate folders.
 
 ### Disabling Subfolders
 To disable subfolders inside categories:
 ```sh
-python dockimg.py "cars=tesla,ferrari" 50 --no-subfolders
+python main.py "cars=tesla,ferrari" 50 --no-subfolders
 ```
 This will save all images inside the "cars" folder without subdirectories.
 
